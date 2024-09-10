@@ -39,27 +39,27 @@ class Actor(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-class Movie(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    duration = models.IntegerField()
-    genres = models.ManyToManyField(Genre)
-    actors = models.ManyToManyField(Actor)
-    image = models.ImageField(null=True, upload_to="upload-image/")
-
-    class Meta:
-        ordering = ["title"]
-
-    def __str__(self):
-        return self.title
-
-
 def create_custom_path(instance, filename):
     _, extension = os.path.splitext(filename)
     return os.path.join(
         "uploads/images/",
         f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
     )
+
+
+class Movie(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    duration = models.IntegerField()
+    genres = models.ManyToManyField(Genre)
+    actors = models.ManyToManyField(Actor)
+    image = models.ImageField(null=True, upload_to=create_custom_path)
+
+    class Meta:
+        ordering = ["title"]
+
+    def __str__(self):
+        return self.title
 
 
 class MovieSession(models.Model):
